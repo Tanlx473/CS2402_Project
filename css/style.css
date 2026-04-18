@@ -1,0 +1,201 @@
+/*定义 CSS 变量，统一管理*/
+:root {
+    /* Surface & Background */
+    --page-bg: #f4efe6;
+    --panel-bg: #fffaf2;
+    --panel-border: #d8c9b3;
+
+    /*text*/
+    --text-main: #1d1b16;
+    --text-muted: #6c583a;
+
+
+    /*强调*/
+    --accent: #a33d2e;
+    /*弱强调*/
+    --accent-soft: #f0d6be;
+
+    /*网格与针*/
+    --grid-line: #b9ac98;
+    --needle-hit: #b7342d;
+    --needle-miss: #1f6c77;
+    --shadow: 0 18px 40px rgba(48, 38, 20, 0.12);
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Georgia","Times New Roman", serif;
+    color: var(--text-main);
+    background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.85), transparent 35%),
+        linear-gradient(180deg, #efe6d7 0%, var(--page-bg) 100%);
+    min-height: 100vh;
+}
+
+a {
+    color: inherit;
+}
+
+.site-header {
+    padding: 2rem 1.5rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.site-header h1 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    letter-spacing: 0.02em;
+}
+
+.site-nav {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.site-nav a {
+    text-decoration: none;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    color: var(--text-muted);
+}
+
+/*自动高亮当前页面*/
+.site-nav a[aria-current="page"] {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: rgba(163, 61, 46, 0.18);
+}
+
+.demo-layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem 2rem;
+    display: grid;
+    grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.panel,
+.control-panel,
+.display-panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+}
+
+.panel h2,
+.control-panel h2,
+.display-panel h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.35rem;
+}
+
+.field-grid {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.field {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.field span {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.field input {
+    width: 100%;
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 0.8rem 0.9rem;
+    font: inherit;
+    background: #fff;
+}
+
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+.button-row button {
+    border: 0;
+    border-radius: 999px;
+    padding: 0.8rem 1.1rem;
+    font: inherit;
+    cursor: pointer;
+    background: var(--accent);
+    color: #fffaf2;
+}
+
+.button-row button:nth-child(2) {
+    background: #2f5d62;
+}
+
+.button-row button:nth-child(3) {
+    background: #6c685f;
+}
+
+.status-message {
+    min-height: 1.5rem;
+    margin: 1rem 0 0;
+    color: var(--text-muted);
+}
+
+#simulation-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 18px;
+    border: 1px solid var(--panel-border);
+    background:
+        linear-gradient(180deg, rgba(255, 251, 244, 0.96), rgba(248, 240, 229, 0.96));
+}
+
+.stats-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.85rem;
+}
+
+.stat-card {
+    padding: 0.95rem 1rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(216, 201, 179, 0.85);
+}
+
+.stat-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.stat-card strong {
+    font-size: 1.1rem;
+}
+
+
+/*Responsive Design*/
+@media (max-width: 920px) {
+    .demo-layout {
+        grid-template-columns: 1fr;
+    }
+}
