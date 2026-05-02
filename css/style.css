@@ -74,10 +74,74 @@ a {
     border-color: rgba(163, 61, 46, 0.18);
 }
 
-.demo-layout {
+.demo-page {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1.5rem 2rem;
+}
+
+.demo-guide {
+    margin-bottom: 1.5rem;
+}
+
+.demo-guide details {
+    display: block;
+}
+
+.demo-guide summary {
+    list-style: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.demo-guide summary::-webkit-details-marker {
+    display: none;
+}
+
+.demo-guide summary::after {
+    content: "+";
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 1.25rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.demo-guide details[open] summary::after {
+    content: "-";
+}
+
+.instructions {
+    margin-top: 1rem;
+    color: var(--text-main);
+}
+
+.instructions p {
+    margin: 0 0 0.75rem;
+}
+
+.instructions ol {
+    margin: 0;
+    padding-left: 1.4rem;
+}
+
+.instructions li + li {
+    margin-top: 0.5rem;
+}
+
+.demo-layout {
     display: grid;
     grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
     gap: 1.5rem;

@@ -1,26 +1,20 @@
 /**
- * Canvas element used to render the rectangular grid and dropped needles.
+ * Get Canvas element
  */
 const canvas = document.getElementById("simulation-canvas");
 
 /**
  * 2D rendering context for all drawing operations in the simulation.
+ * 该模拟中所有绘图操作的 2D 渲染环境。
  */
 const ctx = canvas.getContext("2d");
 
 /**
- * Input element for the needle length l in mathematical units.
+ * Input element for the needle length l,
+ * the horizontal & vertical grid spacing a in mathematical units.
  */
 const needleLengthInput = document.getElementById("needle-length");
-
-/**
- * Input element for the horizontal grid spacing a in mathematical units.
- */
 const gridWidthInput = document.getElementById("grid-width");
-
-/**
- * Input element for the vertical grid spacing b in mathematical units.
- */
 const gridHeightInput = document.getElementById("grid-height");
 
 /**
@@ -29,13 +23,9 @@ const gridHeightInput = document.getElementById("grid-height");
 const trialCountInput = document.getElementById("trial-count");
 
 /**
- * Button that drops exactly one random needle.
+ * Button that drops exactly one random needle & runs a batch of N random trials.
  */
 const dropOneButton = document.getElementById("drop-one");
-
-/**
- * Button that runs a batch of N random trials.
- */
 const runManyButton = document.getElementById("run-many");
 
 /**
@@ -49,23 +39,15 @@ const resetButton = document.getElementById("reset-demo");
 const statusMessage = document.getElementById("status-message");
 
 /**
- * Output element showing the cumulative number of simulated trials.
+ * Output element showing the cumulative number of simulated trials & hit events.
  */
 const totalTrialsOutput = document.getElementById("total-trials");
-
-/**
- * Output element showing the cumulative number of hit events.
- */
 const totalHitsOutput = document.getElementById("total-hits");
 
 /**
- * Output element showing the empirical hit probability from simulation.
+ * Output element showing the empirical hit probability from simulation & theoretical Buffon-Laplace probability.
  */
 const empiricalProbabilityOutput = document.getElementById("empirical-probability");
-
-/**
- * Output element showing the theoretical Buffon-Laplace probability.
- */
 const theoreticalProbabilityOutput = document.getElementById("theoretical-probability");
 
 /**
@@ -79,12 +61,19 @@ const probabilityErrorOutput = document.getElementById("probability-error");
 const lastResultOutput = document.getElementById("last-result");
 
 /**
+ * Output element showing the π value estimated from the simulation and the absolute error with accurate π
+ */
+const estimatedPiOutput = document.getElementById("estimated-pi");
+const piErrorOutput = document.getElementById("pi-error");
+
+/**
  * Empty margin around the visible grid so the drawing is not flush with the canvas edge.
  */
 const MARGIN = 40;
 
 /**
- * Pixel-to-mathematical scaling factor used by both rendering and hit detection.
+ * Pixel-to-mathematical scaling factor
+ * used by both rendering and hit detection.
  */
 const SCALE = 80;
 
@@ -256,39 +245,28 @@ function getEndpoints(needle) {
     const { x, y, theta, l } = needle;
     const halfLengthPx = (l * SCALE) / 2;
 
-    const dx = halfLengthPx * Math.cos(theta);
-    const dy = halfLengthPx * Math.sin(theta);
-
     return {
-        x1: x - dx,
-        y1: y - dy,
-        x2: x + dx,
-        y2: y + dy
+        x1: x - halfLengthPx * Math.cos(theta),
+        y1: y - halfLengthPx * Math.sin(theta),
+        x2: x + halfLengthPx * Math.cos(theta),
+        y2: y + halfLengthPx * Math.sin(theta)
     };
 }
 
 /**
- * Determines whether a needle intersects any vertical or horizontal grid line.
+ * Determines whether a needle intersects at least one grid line.
  *
- * @param {{x: number, y: number, theta: number, l: number}} needle - Needle center, orientation, and length.
+ * @param {{x: number, y: number, theta: number, l: number}} needle - Needle to test.
  * @param {number} a - Horizontal grid spacing in mathematical units.
  * @param {number} b - Vertical grid spacing in mathematical units.
- * @returns {boolean} True if the needle intersects at least one grid line; otherwise false.
+ * @returns {boolean} True if the needle crosses at least one line of the lattice.
  */
 function checkHit(needle, a, b) {
     const metrics = getGridMetrics(a, b);
 
-    /**
-     * Convert the canvas center point back to mathematical coordinates measured from the grid origin.
-     * The canvas y-axis points downward, but that does not affect hit detection because only interval overlap matters.
-     */
     const centerX = (needle.x - metrics.originX) / SCALE;
     const centerY = (needle.y - metrics.originY) / SCALE;
 
-    /**
-     * The endpoint projections in mathematical coordinates define the x-interval and y-interval covered by the needle.
-     * A hit occurs when either interval crosses at least one lattice boundary.
-     */
     const halfX = (needle.l / 2) * Math.cos(needle.theta);
     const halfY = (needle.l / 2) * Math.sin(needle.theta);
 
@@ -323,11 +301,12 @@ function drawNeedle(needle, isHit) {
 
 /**
  * Computes the Buffon-Laplace theoretical hit probability when the classical formula is applicable.
+ * Valid only when l ≤ min(a, b).
  *
  * @param {number} l - Needle length in mathematical units.
  * @param {number} a - Horizontal grid spacing in mathematical units.
  * @param {number} b - Vertical grid spacing in mathematical units.
- * @returns {number|null} Theoretical probability, or null when l > min(a, b) so the standard formula does not apply.
+ * @returns {number|null} Theoretical probability, or null when l > min(a, b).
  */
 function theoreticalProbability(l, a, b) {
     if (l > Math.min(a, b)) {
@@ -335,6 +314,31 @@ function theoreticalProbability(l, a, b) {
     }
 
     return (2 * l * (a + b) - l * l) / (Math.PI * a * b);
+}
+
+/**
+ * Estimates π from the empirical hit probability using the inverse Buffon-Laplace formula.
+ * Derived from P(Hit) = (2l(a+b) - l²) / (π·a·b), solving for π:
+ *   π̂ = (2l(a+b) - l²) / (P̂(Hit) · a·b)
+ *
+ * @param {number} l - Needle length in mathematical units.
+ * @param {number} a - Horizontal grid spacing in mathematical units.
+ * @param {number} b - Vertical grid spacing in mathematical units.
+ * @param {number} totalTrials - Number of completed trials.
+ * @param {number} totalHits - Number of hit events.
+ * @returns {number|null} Estimated π, or null if the formula does not apply or no hits yet.
+ */
+function estimatePi(l, a, b, totalTrials, totalHits) {
+    if (l > Math.min(a, b)) {
+        return null;
+    }
+
+    if (totalTrials === 0 || totalHits === 0) {
+        return null;
+    }
+
+    const pHat = totalHits / totalTrials;
+    return (2 * l * (a + b) - l * l) / (pHat * a * b);
 }
 
 /**
@@ -361,6 +365,7 @@ function empiricalProbability(totalTrials, totalHits) {
 function updateStats(inputs) {
     const theory = theoreticalProbability(inputs.l, inputs.a, inputs.b);
     const empirical = empiricalProbability(state.totalTrials, state.totalHits);
+    const piEst = estimatePi(inputs.l, inputs.a, inputs.b, state.totalTrials, state.totalHits);
 
     totalTrialsOutput.textContent = String(state.totalTrials);
     totalHitsOutput.textContent = String(state.totalHits);
@@ -369,9 +374,19 @@ function updateStats(inputs) {
     if (theory === null) {
         theoreticalProbabilityOutput.textContent = "N/A";
         probabilityErrorOutput.textContent = "N/A";
+        estimatedPiOutput.textContent = "N/A";
+        piErrorOutput.textContent = "N/A";
     } else {
         theoreticalProbabilityOutput.textContent = theory.toFixed(4);
         probabilityErrorOutput.textContent = Math.abs(empirical - theory).toFixed(4);
+
+        if (piEst === null) {
+            estimatedPiOutput.textContent = "—";
+            piErrorOutput.textContent = "—";
+        } else {
+            estimatedPiOutput.textContent = piEst.toFixed(6);
+            piErrorOutput.textContent = Math.abs(piEst - Math.PI).toFixed(6);
+        }
     }
 
     if (state.lastHit === null) {
@@ -406,11 +421,11 @@ function updateStatus(inputs, overrideMessage) {
     }
 
     if (inputs.l > Math.min(inputs.a, inputs.b)) {
-        statusMessage.textContent = "Simulation runs normally, but the classical formula is only valid when l ≤ min(a, b).";
+        statusMessage.textContent = "Simulation runs normally, but the classical formula is only valid when l ≤ min(a, b). π estimation is unavailable.";
         return;
     }
 
-    statusMessage.textContent = "Parameters are valid. Run the simulation to compare empirical and theoretical probabilities.";
+    statusMessage.textContent = "Parameters are valid. Run the simulation to estimate π and compare with the theoretical probability.";
 }
 
 /**
@@ -456,7 +471,58 @@ function dropOne(event) {
 }
 
 /**
- * Runs N Monte Carlo trials in one batch and updates the UI once at the end.
+ * Sets the disabled state of all control buttons during animation.
+ *
+ * @param {boolean} disabled - True to disable buttons, false to re-enable.
+ * @returns {void} No return value.
+ */
+function setButtonsDisabled(disabled) {
+    dropOneButton.disabled = disabled;
+    runManyButton.disabled = disabled;
+    resetButton.disabled = disabled;
+}
+
+/**
+ * Animates N Monte Carlo trials across multiple frames so the needles appear to
+ * fall onto the canvas progressively rather than all at once.
+ * Uses requestAnimationFrame and auto-scales the per-frame batch size so the
+ * full run completes in roughly 1 second regardless of N.
+ *
+ * @param {{l: number, a: number, b: number}} inputs - Current simulation parameters.
+ * @param {number} totalToRun - Total number of needles to drop in this animation run.
+ * @returns {void} No return value.
+ */
+function animateDrop(inputs, totalToRun) {
+    const perFrame = Math.max(1, Math.floor(totalToRun / 60));
+    let dropped = 0;
+    let batchHits = 0;
+
+    setButtonsDisabled(true);
+
+    function frame() {
+        const thisFrame = Math.min(perFrame, totalToRun - dropped);
+
+        for (let i = 0; i < thisFrame; i += 1) {
+            batchHits += runSingleTrial(inputs) ? 1 : 0;
+        }
+
+        dropped += thisFrame;
+        updateStats(inputs);
+        updateStatus(inputs, `Dropping needles… ${dropped} / ${totalToRun}`);
+
+        if (dropped < totalToRun) {
+            requestAnimationFrame(frame);
+        } else {
+            setButtonsDisabled(false);
+            updateStatus(inputs, `Completed ${totalToRun} trials. Batch hits: ${batchHits}.`);
+        }
+    }
+
+    requestAnimationFrame(frame);
+}
+
+/**
+ * Runs N Monte Carlo trials with a progressive frame-by-frame animation.
  *
  * @param {Event} event - Click event from the "Run N times" button.
  * @returns {void} No return value.
@@ -472,15 +538,7 @@ function runMany(event) {
         return;
     }
 
-    const batchSize = validation.normalizedN;
-    let batchHits = 0;
-
-    for (let i = 0; i < batchSize; i += 1) {
-        batchHits += runSingleTrial(inputs) ? 1 : 0;
-    }
-
-    updateStats(inputs);
-    updateStatus(inputs, `Completed ${batchSize} trials. Batch hits: ${batchHits}.`);
+    animateDrop(inputs, validation.normalizedN);
 }
 
 /**

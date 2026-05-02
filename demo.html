@@ -13,72 +13,100 @@
         <a href="index.html">Home</a>
         <a href="demo.html" aria-current="page">Demo</a>
         <a href="theory.html">Theory</a>
-        <a href="tbl.html">Team Learning</a>
+        <a href="tbl.html">Team-based Learning</a>
     </nav>
 </header>
 
-<main class="demo-layout">
-    <section class="control-panel">
-        <h2>Control Panel</h2>
-        <div class="field-grid">
-            <label class="field">
-                <span>Needle length l</span>
-                <input id="needle-length" type="number" min="0.01" step="0.01" value="0.8">
-            </label>
-            <label class="field">
-                <span>Grid width a</span>
-                <input id="grid-width" type="number" min="0.01" step="0.01" value="1">
-            </label>
-            <label class="field">
-                <span>Grid height b</span>
-                <input id="grid-height" type="number" min="0.01" step="0.01" value="1">
-            </label>
-            <label class="field">
-                <span>Number of trials N</span>
-                <input id="trial-count" type="number" min="1" step="1" value="1000">
-            </label>
-        </div>
-
-        <div class="button-row">
-            <button id="drop-one" type="button">Drop One Needle</button>
-            <button id="run-many" type="button">Run N times</button>
-            <button id="reset-demo" type="button">Reset</button>
-        </div>
-
-        <p id="status-message" class="status-message">Set parameters and start the simulation.</p>
+<main class="demo-page">
+    <section class="demo-guide panel">
+        <details open>
+            <summary>How to Use This Demo</summary>
+            <div class="instructions">
+                <p>Follow these steps to experience the simulation:</p>
+                <ol>
+                    <li>Set the needle length <strong>l</strong> and grid spacings <strong>a</strong>, <strong>b</strong>. For the classical formula to apply, ensure <strong>l ≤ min(a, b)</strong>.</li>
+                    <li>Set <strong>N</strong>, the number of needles to drop in one batch.</li>
+                    <li>Click <strong>Drop One Needle</strong> to observe a single trial and its result.</li>
+                    <li>Click <strong>Run N times</strong> to run a batch and compare the empirical probability with the theoretical probability.</li>
+                    <li>Try increasing <strong>N</strong> to see the empirical result become more stable.</li>
+                    <li>Click <strong>Reset</strong> or change any parameter to start fresh.</li>
+                </ol>
+            </div>
+        </details>
     </section>
 
-    <section class="display-panel">
-        <h2>Display Area</h2>
-        <canvas id="simulation-canvas" width="840" height="560" ></canvas>
+    <div class="demo-layout">
+        <section class="control-panel">
+            <h2>Control Panel</h2>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <span class="stat-label">Total Trials</span>
-                <strong id="total-trials">0</strong>
+            <div class="field-grid">
+                <label class="field">
+                    <span>Needle length l</span>
+                    <input id="needle-length" type="number" min="0.01" step="0.01" value="0.8">
+                </label>
+                <label class="field">
+                    <span>Grid width a</span>
+                    <input id="grid-width" type="number" min="0.01" step="0.01" value="1">
+                </label>
+                <label class="field">
+                    <span>Grid height b</span>
+                    <input id="grid-height" type="number" min="0.01" step="0.01" value="1">
+                </label>
+                <label class="field">
+                    <span>Number of trials N</span>
+                    <input id="trial-count" type="number" min="1" step="1" value="1000">
+                </label>
             </div>
-            <div class="stat-card">
-                <span class="stat-label">Total Hits</span>
-                <strong id="total-hits">0</strong>
+
+            <div class="button-row">
+                <button id="drop-one" type="button">Drop One Needle</button>
+                <button id="run-many" type="button">Run N times</button>
+                <button id="reset-demo" type="button">Reset</button>
             </div>
-            <div class="stat-card">
-                <span class="stat-label">Empirical Probability</span>
-                <strong id="empirical-probability">0.0000</strong>
+
+            <p id="status-message" class="status-message">Set parameters and start the simulation.</p>
+        </section>
+
+        <section class="display-panel">
+            <h2>Display Area</h2>
+            <canvas id="simulation-canvas" width="840" height="560"></canvas>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Total Trials</span>
+                    <strong id="total-trials">0</strong>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Total Hits</span>
+                    <strong id="total-hits">0</strong>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Empirical Probability</span>
+                    <strong id="empirical-probability">0.0000</strong>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Theoretical Probability</span>
+                    <strong id="theoretical-probability">0.0000</strong>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Probability Error</span>
+                    <strong id="probability-error">0.0000</strong>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Last Result</span>
+                    <strong id="last-result">No trial yet</strong>
+                </div>
+                <div class="stat-card stat-card--highlight">
+                    <span class="stat-label">Estimated π</span>
+                    <strong id="estimated-pi">—</strong>
+                </div>
+                <div class="stat-card stat-card--highlight">
+                    <span class="stat-label">π Error</span>
+                    <strong id="pi-error">—</strong>
+                </div>
             </div>
-            <div class="stat-card">
-                <span class="stat-label">Theoretical Probability</span>
-                <strong id="theoretical-probability">0.0000</strong>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Error</span>
-                <strong id="probability-error">0.0000</strong>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Last Result</span>
-                <strong id="last-result">No trial yet</strong>
-            </div>
-        </div>
-    </section>
+        </section>
+    </div>
 </main>
 
 <script src="js/demo.js"></script>
