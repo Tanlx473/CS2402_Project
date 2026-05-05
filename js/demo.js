@@ -5,7 +5,7 @@ const canvas = document.getElementById("simulation-canvas");
 
 /**
  * 2D rendering context for all drawing operations in the simulation.
- * 该模拟中所有绘图操作的 2D 渲染环境。
+ * 该模拟中所有绘图操作的 2D 渲染环境。所有在`<canvas>`上的绘制操作，都必须通过`ctx`来完成。
  */
 const ctx = canvas.getContext("2d");
 
@@ -23,14 +23,10 @@ const gridHeightInput = document.getElementById("grid-height");
 const trialCountInput = document.getElementById("trial-count");
 
 /**
- * Button that drops exactly one random needle & runs a batch of N random trials.
+ * Buttons
  */
 const dropOneButton = document.getElementById("drop-one");
 const runManyButton = document.getElementById("run-many");
-
-/**
- * Button that clears the canvas and resets all accumulated statistics.
- */
 const resetButton = document.getElementById("reset-demo");
 
 /**
@@ -193,14 +189,16 @@ function drawGrid(a, b) {
 
     for (let i = 0; i <= metrics.cols; i += 1) {
         const x = metrics.originX + i * a * SCALE;
-        ctx.beginPath();
-        ctx.moveTo(x, metrics.originY);
-        ctx.lineTo(x, metrics.originY + metrics.heightPx);
-        ctx.stroke();
+
+        ctx.beginPath();    // start a new path
+        ctx.moveTo(x, metrics.originY);     // move the pen without drawing
+        ctx.lineTo(x, metrics.originY + metrics.heightPx);      // add a line segment
+        ctx.stroke();       //  render the path
     }
 
     for (let j = 0; j <= metrics.rows; j += 1) {
         const y = metrics.originY + j * b * SCALE;
+
         ctx.beginPath();
         ctx.moveTo(metrics.originX, y);
         ctx.lineTo(metrics.originX + metrics.widthPx, y);
@@ -222,6 +220,7 @@ function redrawScene(a, b) {
 
 /**
  * Generates one random needle center and orientation uniformly inside the visible grid domain.
+ * Math.random() ~ Uniform(0, 1)
  *
  * @param {number} l - Needle length in mathematical units.
  * @param {{originX: number, originY: number, widthPx: number, heightPx: number}} metrics - Current visible grid geometry.
@@ -579,7 +578,7 @@ function handleParameterChange(event) {
 }
 
 /**
- * Initializes the demo UI, draws the first grid, and attaches all event listeners.
+ * Initialises the demo UI, draws the first grid, and attaches all event listeners.
  *
  * @returns {void} No return value.
  */

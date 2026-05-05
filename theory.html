@@ -1,57 +1,173 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Buffon-Laplace Project</title>
-    <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./lib/katex/katex.css">
-
+    <title>Buffon-Laplace Theory</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="lib/katex/katex.min.css">
 </head>
 <body>
-
-
 <header class="site-header">
-    <h1>Buffon-Laplace Needle Problem</h1>
+    <h1>Buffon-Laplace Needle Theory</h1>
     <nav class="site-nav">
-        <a href="index.html" aria-current="page">Home</a>
-        <a href="demo.html" >Demo</a>
-        <a href="theory.html">Theory</a>
+        <a href="index.html">Home</a>
+        <a href="demo.html">Demo</a>
+        <a href="theory.html" aria-current="page">Theory</a>
         <a href="tbl.html">Team-based Learning</a>
     </nav>
 </header>
 
-<h1>Theory Page Test</h1>
+<main class="theory-page">
+    <section class="theory-hero panel">
 
-<p>
-    This is a simple test for KaTeX rendering.
-    We use an inline formula such as $a^2 + b^2 = c^2$ inside a sentence.
-</p>
+        <h2>Understanding the Buffon-Laplace Needle Problem</h2>
+        <p>
+            This page explains the probability model behind the interactive demo and shows how repeated random trials can be used to estimate
+            <span class="math-inline" data-math="\pi"></span>.
+        </p>
+    </section>
 
-<div class="formula-block">
-    $$
-    P = \frac{2L}{\pi D}
-    $$
-</div>
+    <section class="panel theory-section">
+        <h2>1. The Classic Starting Point: Buffon's Needle</h2>
+        <p>
+            In 1733, the French naturalist <strong>Georges-Louis Leclerc, Comte de Buffon</strong> posed a deceptively simple question:
+        </p>
+        <blockquote class="theory-quote">
+            If a needle of length <span class="math-inline" data-math="\ell"></span> is dropped randomly onto a floor ruled with parallel lines spaced
+            <span class="math-inline" data-math="d"></span> apart (where
+            <span class="math-inline" data-math="\ell \leq d"></span>), what is the probability that the needle crosses a line?
+        </blockquote>
+        <p>The answer turns out to be:</p>
+        <div class="math-display" data-math="P = \frac{2\ell}{\pi d}"></div>
+        <p>
+            This result is remarkable because a physical random experiment gives a way to estimate
+            <span class="math-inline" data-math="\pi"></span>. The more times the needle is dropped, the better the estimate becomes.
+        </p>
+        <p>But what if the floor has lines in both directions?</p>
+    </section>
 
-<p>
-    If both the inline formula and the displayed formula are rendered correctly,
-    then the KaTeX library has been loaded successfully.
-</p>
+    <section class="panel theory-section">
+        <h2>2. Extending to Two Dimensions: The Buffon-Laplace Problem</h2>
+        <p>
+            The <strong>Buffon-Laplace Needle Problem</strong> generalises the original version by replacing the parallel lines with a
+            <strong>rectangular grid</strong>: horizontal lines spaced
+            <span class="math-inline" data-math="b"></span> apart and vertical lines spaced
+            <span class="math-inline" data-math="a"></span> apart.
+        </p>
+        <p>
+            A needle of length <span class="math-inline" data-math="\ell"></span> (with
+            <span class="math-inline" data-math="\ell < a"></span> and
+            <span class="math-inline" data-math="\ell < b"></span>) is dropped randomly. We now ask:
+            <strong>what is the probability that the needle crosses at least one grid line?</strong>
+        </p>
+        <p>
+            This version was first attempted by Buffon in 1777, but his derivation contained an error. A correct solution was later published by
+            <strong>Pierre-Simon Laplace</strong> in 1812, which is why the problem carries both names.
+        </p>
+    </section>
 
-<!-- KaTeX JS -->
-<script src="./lib/katex/katex.js"></script>
+    <section class="panel theory-section">
+        <h2>3. Setting Up the Model</h2>
 
-<!-- Auto-render extension -->
-<script src="./lib/katex/contrib/auto-render.min.js"></script>
+        <h3>3.1 Modeling Assumptions</h3>
+        <p>To formalise the problem rigorously, we make the following assumptions:</p>
+        <ul class="theory-list">
+            <li>
+                <strong>Periodicity of the grid:</strong>
+                The rectangular grid can be treated as a repeating tiling of identical cells, so it is enough to analyse the needle within one cell.
+            </li>
+            <li>
+                <strong>Uniform distribution of the centre:</strong>
+                The centre point <span class="math-inline" data-math="(x, y)"></span> of the needle is uniformly distributed over the rectangle:
+                <div class="math-display" data-math="x \sim \text{Uniform}(0, a), \quad y \sim \text{Uniform}(0, b)"></div>
+            </li>
+            <li>
+                <strong>Independence of position and orientation:</strong>
+                The orientation <span class="math-inline" data-math="\phi"></span> of the needle is independent of its position
+                <span class="math-inline" data-math="(x, y)"></span>.
+            </li>
+            <li>
+                <strong>Uniform distribution of orientation:</strong>
+                Due to rotational symmetry, the angle satisfies:
+                <div class="math-display" data-math="\phi \sim \text{Uniform}\!\left(-\frac{\pi}{2},\, \frac{\pi}{2}\right)"></div>
+            </li>
+        </ul>
 
+        <p>These assumptions define a uniform probability distribution over the sample space:</p>
+        <div class="math-display" data-math="\Omega = (0,a) \times (0,b) \times \left(-\frac{\pi}{2},\, \frac{\pi}{2}\right)"></div>
+        <p>
+            The probability of any event is then the ratio of the corresponding volume in
+            <span class="math-inline" data-math="\Omega"></span> to the total volume
+            <span class="math-inline" data-math="\pi ab"></span>, which justifies the integration approach used in the derivation.
+        </p>
+
+        <h3>3.2 Crossing Conditions</h3>
+        <p>
+            The needle's state is fully described by the three random variables above. Using them, we can express when the needle reaches a grid line.
+        </p>
+        <p>The needle crosses a <strong>vertical</strong> line when its horizontal projection reaches a line:</p>
+        <div class="math-display" data-math="x < \frac{\ell}{2}|\cos\phi| \quad \text{or} \quad x > a - \frac{\ell}{2}|\cos\phi|"></div>
+        <p>The needle crosses a <strong>horizontal</strong> line when its vertical projection reaches a line:</p>
+        <div class="math-display" data-math="y < \frac{\ell}{2}|\sin\phi| \quad \text{or} \quad y > b - \frac{\ell}{2}|\sin\phi|"></div>
+    </section>
+
+    <section class="panel theory-section">
+        <h2>4. Deriving the Probability</h2>
+        <p>
+            It is easier to first compute the probability that the needle crosses <strong>no</strong> lines, meaning the centre
+            <span class="math-inline" data-math="(x, y)"></span> stays far enough from all four sides of the cell. At a fixed angle
+            <span class="math-inline" data-math="\phi"></span>, this safe area is:
+        </p>
+        <div class="math-display" data-math="F(\phi) = ab - b\ell|\cos\phi| - \ell a|\sin\phi| + \frac{1}{2}\ell^2|\sin(2\phi)|"></div>
+        <p>
+            The last term corrects for the overlap where the needle is close to both a horizontal line and a vertical line at the same time.
+        </p>
+        <p>Integrating over all angles and dividing by the total volume <span class="math-inline" data-math="\pi ab"></span> gives:</p>
+        <div class="math-display" data-math="P(\text{no crossing}) = \frac{\displaystyle\int_{-\pi/2}^{\pi/2} F(\phi)\, d\phi}{\pi ab}"></div>
+        <p>Evaluating this integral and subtracting from 1 yields the closed-form result:</p>
+        <div class="math-display" data-math="\boxed{P(\ell;\, a,\, b) = \frac{2\ell(a + b) - \ell^2}{\pi ab}}"></div>
+    </section>
+
+    <section class="panel theory-section">
+        <h2>5. Estimating <span class="math-inline" data-math="\pi"></span></h2>
+        <p>Rearranging the formula above lets us solve for <span class="math-inline" data-math="\pi"></span>:</p>
+        <div class="math-display" data-math="\pi = \frac{2\ell(a + b) - \ell^2}{P \cdot ab}"></div>
+        <p>
+            In a simulation with <span class="math-inline" data-math="n"></span> needle drops, if
+            <span class="math-inline" data-math="H"></span> of them result in a crossing, we estimate
+            <span class="math-inline" data-math="P \approx H/n"></span>, giving:
+        </p>
+        <div class="math-display" data-math="\hat{\pi} = \frac{\left[2\ell(a + b) - \ell^2\right] \cdot n}{H \cdot ab}"></div>
+        <p>
+            By the <strong>Law of Large Numbers</strong>, as
+            <span class="math-inline" data-math="n \to \infty"></span>,
+            <span class="math-inline" data-math="\hat{\pi}"></span> converges to the true value of
+            <span class="math-inline" data-math="\pi"></span>.
+        </p>
+    </section>
+
+    <section class="panel theory-section">
+        <h2>6. What to Learn from the Demo</h2>
+        <ul class="theory-list">
+            <li><strong>More throws mean a better estimate:</strong> watch <span class="math-inline" data-math="\hat{\pi}"></span> stabilise as <span class="math-inline" data-math="n"></span> increases.</li>
+            <li><strong>The effect of needle length:</strong> a longer needle crosses lines more often, which changes the estimated hit probability.</li>
+            <li><strong>The effect of grid spacing:</strong> larger values of <span class="math-inline" data-math="a"></span> and <span class="math-inline" data-math="b"></span> reduce the chance of a crossing.</li>
+        </ul>
+    </section>
+</main>
+
+<script src="lib/katex/katex.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        renderMathInElement(document.body, {
-            delimiters: [
-                { left: "$$", right: "$$", display: true },
-                { left: "$", right: "$", display: false }
-            ],
-            throwOnError: false
+        document.querySelectorAll("[data-math]").forEach(function (node) {
+            var math = node.getAttribute("data-math");
+            var displayMode = node.classList.contains("math-display");
+
+            katex.render(math, node, {
+                displayMode: displayMode,
+                throwOnError: false
+            });
         });
     });
 </script>

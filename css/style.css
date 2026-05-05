@@ -80,6 +80,62 @@ a {
     padding: 0 1.5rem 2rem;
 }
 
+.content-page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 1.5rem 2.5rem;
+}
+
+.content-hero,
+.content-section {
+    margin-bottom: 1.5rem;
+}
+
+.content-hero h2,
+.content-section h2 {
+    margin-top: 0;
+}
+
+.content-section p {
+    line-height: 1.7;
+}
+
+.content-list {
+    padding-left: 1.35rem;
+    line-height: 1.7;
+}
+
+.content-list li + li {
+    margin-top: 0.5rem;
+}
+
+.member-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.member-card {
+    padding: 1rem 1.1rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(216, 201, 179, 0.85);
+}
+
+.member-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--accent);
+}
+
+.member-card p {
+    margin: 0.45rem 0;
+}
+
+.placeholder-text {
+    color: var(--text-muted);
+}
+
 .demo-guide {
     margin-bottom: 1.5rem;
 }
@@ -262,4 +318,59 @@ a {
     .demo-layout {
         grid-template-columns: 1fr;
     }
+}
+
+.theory-page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 1.5rem 2.5rem;
+}
+
+.theory-hero,
+.theory-section {
+    margin-bottom: 1.5rem;
+}
+
+.theory-hero h2,
+.theory-section h2 {
+    margin-top: 0;
+}
+
+.theory-section h3 {
+    margin: 1.6rem 0 0.75rem;
+    color: var(--accent);
+}
+
+.theory-section p {
+    line-height: 1.7;
+}
+
+.theory-quote {
+    margin: 1rem 0;
+    padding: 1rem 1.2rem;
+    border-left: 4px solid var(--accent);
+    background: rgba(240, 214, 190, 0.45);
+    color: var(--text-main);
+}
+
+.theory-list {
+    padding-left: 1.35rem;
+    line-height: 1.7;
+}
+
+.theory-list li + li {
+    margin-top: 0.75rem;
+}
+
+.math-inline {
+    white-space: nowrap;
+}
+
+.math-display {
+    margin: 1rem 0 1.25rem;
+    padding: 0.9rem 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(216, 201, 179, 0.9);
+    background: rgba(255, 255, 255, 0.7);
+    overflow-x: auto;
 }
