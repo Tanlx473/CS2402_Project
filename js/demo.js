@@ -22,9 +22,7 @@ const gridHeightInput = document.getElementById("grid-height");
  */
 const trialCountInput = document.getElementById("trial-count");
 
-/**
- * Buttons
- */
+/** Buttons */
 const dropOneButton = document.getElementById("drop-one");
 const runManyButton = document.getElementById("run-many");
 const resetButton = document.getElementById("reset-demo");
@@ -317,8 +315,7 @@ function theoreticalProbability(l, a, b) {
 
 /**
  * Estimates π from the empirical hit probability using the inverse Buffon-Laplace formula.
- * Derived from P(Hit) = (2l(a+b) - l²) / (π·a·b), solving for π:
- *   π̂ = (2l(a+b) - l²) / (P̂(Hit) · a·b)
+ * Derived from P(Hit) = (2l(a+b) - l²) / (π·a·b), solving for π
  *
  * @param {number} l - Needle length in mathematical units.
  * @param {number} a - Horizontal grid spacing in mathematical units.
@@ -464,7 +461,7 @@ function dropOne(event) {
         return;
     }
 
-    runSingleTrial(inputs);
+    runSingleTrial(inputs); // Executes one Monte Carlo trial
     updateStats(inputs);
     updateStatus(inputs, state.lastHit ? "Last trial: hit." : "Last trial: miss.");
 }
