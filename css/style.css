@@ -136,6 +136,57 @@ a {
     color: var(--text-muted);
 }
 
+/* tbl.html Comment Card*/
+.gained-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.gained-card {
+    position: relative;
+    padding: 1.2rem 1.2rem 1.1rem;
+    border-radius: 20px;
+    background: rgba(255, 242, 145, 0.96);
+    border: 1px solid rgba(216, 201, 179, 0.95);
+    box-shadow: 0 14px 28px rgba(48, 38, 20, 0.1);
+    transform: rotate(-3.8deg);
+}
+
+.gained-card:nth-child(2) {
+    transform: rotate(1.6deg);
+}
+
+.gained-card:nth-child(3) {
+    transform: rotate(-0.5deg);
+}
+
+
+.gained-card::before {
+    content: "";
+    position: absolute;
+    top: 0.85rem;
+    right: 1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 999px;
+    background: rgb(255, 0, 0);
+    box-shadow: 0 2px 4px rgba(48, 38, 20, 0.08);
+    transform: rotate(8deg);
+}
+
+.gained-card h3 {
+    margin: 0 0 0.75rem;
+    color: var(--accent);
+    font-size: 1.1rem;
+}
+
+.gained-card p {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
 .demo-guide {
     margin-bottom: 1.5rem;
 }
@@ -318,6 +369,16 @@ a {
     .demo-layout {
         grid-template-columns: 1fr;
     }
+
+    .gained-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gained-card,
+    .gained-card:nth-child(2),
+    .gained-card:nth-child(3) {
+        transform: rotate(0deg);
+    }
 }
 
 .theory-page {
@@ -358,6 +419,7 @@ a {
     line-height: 1.7;
 }
 
+
 .theory-list li + li {
     margin-top: 0.75rem;
 }
@@ -373,4 +435,72 @@ a {
     border: 1px solid rgba(216, 201, 179, 0.9);
     background: rgba(255, 255, 255, 0.7);
     overflow-x: auto;
+}
+
+/* ==========================================
+   jumpToDemo button
+========================================== */
+.jumpToDemo  {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    background:var(--accent);
+    border: 1px solid rgb(110, 4, 4);
+    color: #fffaf2;
+
+    padding: 14px 26px;
+    border-radius: 999px; /* 胶囊按钮 */
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    backdrop-filter: blur(8px); /*glassmorphism-lite*/
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.12);
+
+    transition: all 0.25s ease;
+}
+
+/* Hover：轻微浮起 + 更亮 */
+.scroll-down:hover {
+    background: var(--accent);
+    color: #fffaf2;
+    box-shadow: 0 12px 24px rgba(163, 61, 46, 0.22);
+    transform: translateY(-3px);
+    box-shadow: 0 0 24px rgba(138, 129, 129, 0.22);
+}
+
+/* 箭头图标 */
+.scroll-icon {
+    display: inline-block;
+    font-size: 1.1rem;
+    animation: floatArrow 1.8s ease-in-out infinite;
+}
+
+
+
+.jumpToDemo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 28px rgba(163, 61, 46, 0.28);
+}
+
+.jumpToDemo:active {
+    transform: translateY(0);
+}
+
+.scroll-icon {
+    display: inline-block;
+    font-size: 1.2rem;
+    animation: demo-arrow-sway 2s ease-in-out infinite;
+}
+
+@keyframes demo-arrow-sway {
+    0%,
+    100% {
+        transform: translateX(-4px);
+    }
+
+    50% {
+        transform: translateX(6px);
+    }
 }

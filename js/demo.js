@@ -10,8 +10,8 @@ const canvas = document.getElementById("simulation-canvas");
 const ctx = canvas.getContext("2d");
 
 /**
- * Input element for the needle length l,
- * the horizontal & vertical grid spacing a in mathematical units.
+ * Drawing parameters
+ * Input element for the needle length l, the horizontal & vertical grid spacing a in mathematical units.
  */
 const needleLengthInput = document.getElementById("needle-length");
 const gridWidthInput = document.getElementById("grid-width");
@@ -28,7 +28,7 @@ const runManyButton = document.getElementById("run-many");
 const resetButton = document.getElementById("reset-demo");
 
 /**
- * Text element used to communicate validation errors and simulation status.
+ * Text element, to communicate validation errors and simulation status.
  */
 const statusMessage = document.getElementById("status-message");
 
@@ -136,7 +136,7 @@ function validateInputs(inputs) {
         return { valid: false, message: "Number of trials N must be at least 1.", normalizedN: 0 };
     }
 
-    const normalizedN = Math.max(1, Math.floor(n));
+    const normalizedN = Math.max(1, Math.floor(n)); //试验次数合法化
     return { valid: true, message: "", normalizedN };
 }
 
@@ -314,14 +314,15 @@ function theoreticalProbability(l, a, b) {
 }
 
 /**
- * Estimates π from the empirical hit probability using the inverse Buffon-Laplace formula.
+ * Estimates π
+ * from the empirical hit probability, using the Buffon-Laplace formula.
  * Derived from P(Hit) = (2l(a+b) - l²) / (π·a·b), solving for π
  *
  * @param {number} l - Needle length in mathematical units.
  * @param {number} a - Horizontal grid spacing in mathematical units.
  * @param {number} b - Vertical grid spacing in mathematical units.
- * @param {number} totalTrials - Number of completed trials.
- * @param {number} totalHits - Number of hit events.
+ * @param {number} totalTrials - Num of completed trials.
+ * @param {number} totalHits - Num of hit events.
  * @returns {number|null} Estimated π, or null if the formula does not apply or no hits yet.
  */
 function estimatePi(l, a, b, totalTrials, totalHits) {
@@ -367,7 +368,7 @@ function updateStats(inputs) {
     totalHitsOutput.textContent = String(state.totalHits);
     empiricalProbabilityOutput.textContent = empirical.toFixed(4);
 
-    if (theory === null) {
+    if (theory === null) { // Buffon-Laplace 公式失效
         theoreticalProbabilityOutput.textContent = "N/A";
         probabilityErrorOutput.textContent = "N/A";
         estimatedPiOutput.textContent = "N/A";
@@ -424,6 +425,7 @@ function updateStatus(inputs, overrideMessage) {
     statusMessage.textContent = "Parameters are valid. Run the simulation to estimate π and compare with the theoretical probability.";
 }
 
+
 /**
  * Executes one Monte Carlo trial, draws the needle, and updates cumulative statistics.
  *
@@ -466,6 +468,8 @@ function dropOne(event) {
     updateStatus(inputs, state.lastHit ? "Last trial: hit." : "Last trial: miss.");
 }
 
+
+
 /**
  * Sets the disabled state of all control buttons during animation.
  *
@@ -489,25 +493,26 @@ function setButtonsDisabled(disabled) {
  * @returns {void} No return value.
  */
 function animateDrop(inputs, totalToRun) {
-    const perFrame = Math.max(1, Math.floor(totalToRun / 60));
-    let dropped = 0;
-    let batchHits = 0;
+    const perFrame = Math.max(1, Math.floor(totalToRun / 60)); // 在约 60 帧内完成全部模拟，且perFrame >= 1
+    let dropped = 0; //已经完成trial次数
+    let batchHits = 0; //这批模拟中的命中次数
 
     setButtonsDisabled(true);
 
     function frame() {
-        const thisFrame = Math.min(perFrame, totalToRun - dropped);
+        const thisFrame = Math.min(perFrame, totalToRun - dropped);  //本帧该做次数
 
+        // 重复调用runSingleTrial
         for (let i = 0; i < thisFrame; i += 1) {
             batchHits += runSingleTrial(inputs) ? 1 : 0;
         }
 
         dropped += thisFrame;
         updateStats(inputs);
-        updateStatus(inputs, `Dropping needles… ${dropped} / ${totalToRun}`);
+        updateStatus(inputs, `Dropping needles… ${dropped} / ${totalToRun}`); // 数字动态变化的效果
 
         if (dropped < totalToRun) {
-            requestAnimationFrame(frame);
+            requestAnimationFrame(frame); // 下一帧刷新前，调用 frame()
         } else {
             setButtonsDisabled(false);
             updateStatus(inputs, `Completed ${totalToRun} trials. Batch hits: ${batchHits}.`);
