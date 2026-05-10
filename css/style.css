@@ -17,7 +17,7 @@
     /*网格与针*/
     --grid-line: #6c521e;
     --needle-hit: #b7342d;
-    --needle-miss: #24aeff;
+    --needle-miss: #00bbc1;
     --shadow: 0 18px 40px rgba(48, 38, 20, 0.12);
 }
 
@@ -131,9 +131,6 @@ a {
     margin: 0.45rem 0;
 }
 
-.placeholder-text {
-    color: var(--text-muted);
-}
 
 /* tbl.html Comment Card*/
 .gained-grid {

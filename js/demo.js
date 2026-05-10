@@ -73,21 +73,16 @@ const SCALE = 80;
 
 /**
  * CSS color used for grid lines.
+ * for needles that intersect or not at least one grid line.
  */
 const GRID_COLOR = getComputedStyle(document.documentElement)
     .getPropertyValue("--grid-line")
     .trim();
 
-/**
- * CSS color used for needles that intersect at least one grid line.
- */
 const HIT_COLOR = getComputedStyle(document.documentElement)
     .getPropertyValue("--needle-hit")
     .trim();
 
-/**
- * CSS color used for needles that do not intersect any grid line.
- */
 const MISS_COLOR = getComputedStyle(document.documentElement)
     .getPropertyValue("--needle-miss")
     .trim();
@@ -233,7 +228,7 @@ function generateRandomNeedle(l, metrics) {
 }
 
 /**
- * Computes needle endpoints in canvas coordinates for drawing.
+ * Computes needle endpoints in canvas coordinates.
  *
  * @param {{x: number, y: number, theta: number, l: number}} needle - Needle center, orientation, and length.
  * @returns {{x1: number, y1: number, x2: number, y2: number}} Segment endpoints in canvas pixels.
@@ -281,14 +276,14 @@ function checkHit(needle, a, b) {
 /**
  * Draws one needle using a different color for hits and misses.
  *
- * @param {{x: number, y: number, theta: number, l: number}} needle - Needle center, orientation, and length.
+ * @param {{x: number, y: number, theta: number, l: number}} needle - coordinate of needle center, orientation, and length.
  * @param {boolean} isHit - Whether the needle intersects at least one grid line.
  * @returns {void} No return value.
  */
 function drawNeedle(needle, isHit) {
     const { x1, y1, x2, y2 } = getEndpoints(needle);
 
-    ctx.strokeStyle = isHit ? HIT_COLOR : MISS_COLOR;
+    ctx.strokeStyle = isHit ? HIT_COLOR : MISS_COLOR; // color
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(x1, y1);
@@ -349,7 +344,6 @@ function empiricalProbability(totalTrials, totalHits) {
     if (totalTrials === 0) {
         return 0;
     }
-
     return totalHits / totalTrials;
 }
 
@@ -550,7 +544,6 @@ function runMany(event) {
  */
 function resetSimulation(event) {
     void event;
-
     const inputs = readInputs();
     const validation = validateInputs(inputs);
 
@@ -588,7 +581,6 @@ function init() {
     dropOneButton.addEventListener("click", dropOne);
     runManyButton.addEventListener("click", runMany);
     resetButton.addEventListener("click", resetSimulation);
-
     needleLengthInput.addEventListener("change", handleParameterChange);
     gridWidthInput.addEventListener("change", handleParameterChange);
     gridHeightInput.addEventListener("change", handleParameterChange);
